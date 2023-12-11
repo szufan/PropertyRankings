@@ -1,50 +1,19 @@
-import pathlib
 import pandas as pd
-import plotly.graph_objects as go
-import plotly.express as px
-from dash import Dash, dcc, html, Input, Output, State, callback
-import dash_uploader as du
-import io
-import base64
-import googlemaps
-from datetime import datetime, timedelta
-import pytz
 import numpy as np
+import pytz
 import re
+from datetime import datetime, timedelta
+import googlemaps
+import plotly.graph_objects as go
+from dash import Dash, dcc, html, Input, Output, State, callback
 
-server = app.server
+# Google Maps API initialization
+gmaps = googlemaps.Client(key='AIzaSyCRFJ3g0ifIADm4l_IWw4sEXv4XdDeP3d8')
 
 # Constants
 NIH_ADDRESS = "Medical Center, Bethesda, MD 20894, United States"
 SMITHSONIAN_ADDRESS = "10th St. & Constitution Ave. NW, Washington, DC 20560"
 DATA_FILE = "/Users/szufan/PropertyRankings/src/data/test.csv"
-
-# Create a custom color palette inspired by Wes Anderson aesthetics with 15 colors
-wes_anderson_palette = [
-    "#EC6D71", "#FAC18E", "#9BCCB9", "#CCC3A0", "#70A9A1",
-    "#FFD700", "#CD7F32", "#536872", "#FF6F61", "#C84A4D",
-    "#A8A7A7", "#CCD7D4", "#D8A499", "#A89F91", "#ACD8AA"
-]
-
-# Initialize Google Maps client
-gmaps = googlemaps.Client(key='AIzaSyCRFJ3g0ifIADm4l_IWw4sEXv4XdDeP3d8')
-
-# Function to load data
-def load_data(data_file: str = "test.csv") -> pd.DataFrame:
-    PATH = pathlib.Path(__file__).parent
-    DATA_PATH = PATH.joinpath("data").resolve()
-
-def parse_contents(contents):
-    content_type, content_string = contents.split(',')
-    decoded = base64.b64decode(content_string)
-    try:
-        if 'csv' in content_type:
-            # Assume that the user uploaded a CSV
-            df = pd.read_csv(io.StringIO(decoded.decode('utf-8')))
-            return df
-    except Exception as e:
-        print(e)
-        return None
 
 # Utility Functions
 def to_eastern_time(local_time):
@@ -124,47 +93,11 @@ def calculate_score(df):
     df['Score'] = (0.25 * df['Normalized Monthly Payment']) + (0.25 * df['Normalized Sq. Ft.']) + (0.20 * df['Normalized Distance to Metro']) + (0.20 * df['Normalized Commute Time']) + (0.10 * df['Normalized Transit Time to DC Museums'])
     return df
 
-def minutes_to_hours_minutes(total_minutes):
-    """Convert minutes to a 'hours and minutes' string format."""
-    if pd.isna(total_minutes):
-        return None
-
-    hours = total_minutes // 60
-    minutes = total_minutes % 60
-    return f"{int(hours)} hours {int(minutes)} mins" if hours else f"{int(minutes)} mins"
-
-
-# Function to create the description text
-def create_description_text():
-    return [
-        html.P("Properties were ranked based on the following weighted criteria:"),
-        html.Li("Lowest est. monthly payment (25%)"),
-        html.Li("Highest sq. ft. (25%)"),
-        html.Li("Closest distance to Metro stop (20%)"),
-        html.Li("Shortest commute time (20%)"),
-        html.Li("Shortest transit time to DC museums (10%)"),
-    ]
-
-app = Dash(__name__, title="Property Rankings")
-
-# App layout
-app.layout = html.Div([
-    dcc.Graph(id='graph-id'),
-    html.Div(id='copyable-url'),
-    html.Div(create_description_text(), style={'margin-top': '20px', 'font-family': 'Arial, sans-serif'}),
-    dcc.Upload(id='upload-data', children=html.Button('Upload CSV'), multiple=False)
-])
-
-@app.callback(
-    Output('graph-id', 'figure'),
-    [Input('upload-data', 'contents')],
-    [State('upload-data', 'filename')]
-)
-
-def update_graph(contents, filename):
-    # Load and process data
+# Main Execution
+if __name__ == "__main__":
     df = load_data(DATA_FILE)
-    
+    df = calculate_payments(df)
+
     current_time = datetime.now(pytz.timezone('Australia/Sydney'))
     weekday_morning_et = to_eastern_time(current_time + timedelta((2 - current_time.weekday() + 7) % 7)).replace(hour=8, minute=0, second=0, microsecond=0)
     df['Travel Info'] = df['Address'].apply(lambda x: calculate_travel_time_and_walking_distance(gmaps, x, NIH_ADDRESS, weekday_morning_et))
@@ -181,59 +114,6 @@ def update_graph(contents, filename):
     next_saturday_et = to_eastern_time(current_time + timedelta((5 - current_time.weekday() + 7) % 7)).replace(hour=11, minute=0, second=0, microsecond=0)
     df['Time to Smithsonian'] = df['Address'].apply(lambda x: calculate_travel_time(gmaps, x, SMITHSONIAN_ADDRESS, next_saturday_et))
     df['Time to Smithsonian'] = df['Time to Smithsonian'].apply(convert_time_to_minutes)
-    
-    df = calculate_payments(df)
-    
+
     df = calculate_score(df)
-
-    df['Time to Smithsonian'] = df['Time to Smithsonian'].apply(minutes_to_hours_minutes)
-
-    # Sort the DataFrame by 'Score'
-    df_sorted = df.sort_values(by="Score", ascending=False)
-
-    # Create hover text
-    hover_text = [
-        f"<b>Address:</b> {address}<br>"
-        f"<b>Est. Monthly Payment:</b> ${payment:,.2f}<br>"
-        f"<b>Size:</b> {size} sqft<br>"
-        f"<b>Nearest Metro stop:</b> {metro} meters<br>"
-        f"<b>Avg. commute to NIH:</b> {commute} mins<br>"
-        f"<b>Time to museum campus:</b> {city}"
-        for address, payment, size, metro, commute, city in zip(df_sorted["Address"], df_sorted["Payment"], df_sorted["Size"], df_sorted["Metro"], df_sorted["Commute"], df_sorted["Time to Smithsonian"])
-    ]
-
-    # Create the figure
-    fig = go.Figure(data=[
-        go.Bar(
-            y=df_sorted['Score'], 
-            hovertext=hover_text, 
-            marker_color=wes_anderson_palette[:len(df_sorted)],  # Apply Wes Anderson color palette
-            customdata=df_sorted["Link"].tolist()  # Add URLs as customdata
-        )
-    ])
-
-    # Set the title and layout configuration
-    fig.update_layout(
-        title="Property Rankings (Descending Order)",
-        xaxis=dict(
-            title="Ranking",
-            range=[0.5, len(df_sorted.index) + 0.5]  # Adjusting the x-axis range to start at 1
-        ),
-        yaxis_title="Score"
-    )
-
-    return fig
-
-@app.callback(
-    Output('copyable-url', 'children'),
-    [Input('graph-id', 'clickData')]
-)
-def display_url(clickData):
-    if clickData and 'points' in clickData and 'customdata' in clickData['points'][0]:
-        url = clickData['points'][0]['customdata']
-        if url:
-            return html.A(href=url, children="Go to listing", target='_blank')
-    return "Click on a bar to activate the listing URL"
-
-if __name__ == "__main__":
-    app.run_server(debug=True)
+    print(df)
