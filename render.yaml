@@ -9,4 +9,4 @@ services:
   - key: DASH_SECRET_KEY
     generateValue: true
   regions:
-  - oregon
+  - frankfurt
