@@ -3,3 +3,4 @@ pandas==1.4.4
 plotly==5.18.0
 gunicorn
 dash-tools
+dash-uploader
