@@ -168,20 +168,34 @@ def minutes_to_hours_minutes(total_minutes):
 # Function to create the description text
 def create_description_text():
     return [
-        html.P("Properties were ranked based on the following weighted criteria:"),
-        html.Li("Lowest est. monthly payment (25%)"),
-        html.Li("Highest sq. ft. (25%)"),
-        html.Li("Closest distance to Metro stop (20%)"),
-        html.Li("Shortest commute time (20%)"),
-        html.Li("Shortest transit time to DC museums (10%)"),
+        html.P("This application assists in evaluating real estate properties by ranking them based on a set of weighted criteria. Each criterion is calculated with specific assumptions:"),
+        html.Ul([
+            html.Li([html.Strong("Estimated Monthly Payment:"), " Calculated considering the price, annual tax, and HOA fees, giving lower payments higher scores (25%)."]),
+            html.Li([html.Strong("Property Size:"), " Based on the square footage of the property, with larger sizes scoring higher (25%)."]),
+            html.Li([html.Strong("Proximity to Metro Stations:"), " Measured by the distance to the nearest metro stop, with closer distances scoring higher (20%)."]),
+            html.Li([html.Strong("Commute Time:"), " Calculated using Google Maps API to estimate commute time to key locations, with shorter times scoring higher (20%)."]),
+            html.Li([html.Strong("Transit Time to DC Museums:"), " Also calculated via Google Maps API, focusing on transit time to major DC museums, where shorter times score higher (10%)."])
+        ])
     ]
 
-# App layout
 app.layout = html.Div([
     dcc.Graph(id='graph-id'),
     html.Div(id='copyable-url'),
     html.Div(create_description_text(), style={'margin-top': '20px', 'font-family': 'Arial, sans-serif'}),
-    dcc.Upload(id='upload-data', children=html.Button('Upload CSV'), multiple=False)
+    
+    html.Div([
+        dcc.Upload(
+            id='upload-data', 
+            children=html.Button('Upload CSV'), 
+            multiple=False,
+            style={'margin-top': '20px', 'margin-bottom': '20px'}  # Adjust the top and bottom margins
+        ),
+        html.A(
+            "Download CSV Template",
+            href="https://docs.google.com/spreadsheets/d/1nVribTQGQDjxDtSQkET6gy5bZvRm50UirCkelaH5Wq0/edit?usp=sharing",
+            target="_blank"
+        )
+    ])
 ])
 
 @app.callback(
