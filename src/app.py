@@ -36,7 +36,7 @@ server = app.server
 # Constants
 NIH_ADDRESS = "Medical Center, Bethesda, MD 20894, United States"
 SMITHSONIAN_ADDRESS = "10th St. & Constitution Ave. NW, Washington, DC 20560"
-DATA_FILE = "/Users/szufan/PropertyRankings/src/data/test.csv"
+DATA_FILE = "data/test.csv"
 
 # Create a custom color palette inspired by Wes Anderson aesthetics with 15 colors
 wes_anderson_palette = [
