@@ -4,7 +4,7 @@ services:
   env: python
   plan: starter
   buildCommand: pip install -r requirements.txt
-  startCommand: python app.py
+  startCommand: python src/app.py
   envVars:
   - key: DASH_SECRET_KEY
     generateValue: true
