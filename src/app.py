@@ -31,14 +31,17 @@ version_id = "latest"  # Can be "latest" or a specific version number
 
 api_key = access_secret_version(project_id, secret_id, version_id)
 
-app = Dash(__name__, title="Property Rankings")
+# Add the external stylesheet with Nunito Sans font
+external_stylesheets = ['https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap']
+
+app = Dash(__name__, title="Property Rankings", external_stylesheets=external_stylesheets)
 
 server = app.server
 
 # Constants
 NIH_ADDRESS = "Medical Center, Bethesda, MD 20894, United States"
 SMITHSONIAN_ADDRESS = "10th St. & Constitution Ave. NW, Washington, DC 20560"
-DATA_FILE = "data/test.csv"
+DATA_FILE = "/Users/szufan/PropertyRankings/src/data/test.csv"
 
 # Create a custom color palette inspired by Wes Anderson aesthetics with 15 colors
 wes_anderson_palette = [
@@ -164,7 +167,6 @@ def minutes_to_hours_minutes(total_minutes):
     minutes = total_minutes % 60
     return f"{int(hours)} hours {int(minutes)} mins" if hours else f"{int(minutes)} mins"
 
-
 # Function to create the description text
 def create_description_text():
     return [
@@ -178,15 +180,16 @@ def create_description_text():
         ])
     ]
 
-app.layout = html.Div([
+# Style the entire app with Nunito font
+app.layout = html.Div(style={'font-family': 'Nunito Sans, sans-serif'}, children=[
     dcc.Graph(id='graph-id'),
     html.Div(id='copyable-url'),
-    html.Div(create_description_text(), style={'margin-top': '20px', 'font-family': 'Arial, sans-serif'}),
+    html.Div(create_description_text(), style={'margin-top': '20px'}),
     
     html.Div([
         dcc.Upload(
             id='upload-data', 
-            children=html.Button('Upload CSV'), 
+            children=html.Button('Upload CSV', style={'font-family': 'Nunito Sans, sans-serif', 'font-size': '16px', 'height': '35px'}),  # Set font, font-size, and height for the upload button
             multiple=False,
             style={'margin-top': '20px', 'margin-bottom': '20px'}  # Adjust the top and bottom margins
         ),
@@ -255,14 +258,24 @@ def update_graph(contents, filename):
         )
     ])
 
-    # Set the title and layout configuration
+    # Set the font for the hover text
+    fig.update_traces(
+        hoverlabel=dict(font=dict(family='Nunito Sans, sans-serif'))  # Set the hover label font
+    )
+
+    # Set the font for the plot text
     fig.update_layout(
         title="Property Rankings (Descending Order)",
         xaxis=dict(
             title="Ranking",
-            range=[0.5, len(df_sorted.index) + 0.5]  # Adjusting the x-axis range to start at 1
+            range=[0.5, len(df_sorted.index) + 0.5],  # Adjusting the x-axis range to start at 1
+            tickfont=dict(family='Nunito Sans, sans-serif')  # Set the font for tick labels on the x-axis
         ),
-        yaxis_title="Score"
+        yaxis=dict(
+            title="Score",
+            tickfont=dict(family='Nunito Sans, sans-serif')  # Set the font for tick labels on the y-axis
+        ),
+        font=dict(family='Nunito Sans, sans-serif')  # Set the font for the rest of the plot text
     )
 
     return fig
