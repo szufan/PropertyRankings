@@ -211,9 +211,8 @@ app.layout = html.Div(style={'font-family': 'Nunito Sans, sans-serif'}, children
 
 def update_graph(contents, filename):
     if filename is None:
-        # Handle the case where no file is uploaded
-        # You can provide a default DataFrame or display an error message
-        df = pd.DataFrame()
+        # Load default data
+        df = pd.read_csv('src/data/test.csv')
     else:
         # Load and process data from the uploaded file
         df = load_data(filename)
