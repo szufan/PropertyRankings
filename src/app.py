@@ -12,6 +12,27 @@ import pytz
 import numpy as np
 import re
 
+from google.cloud import secretmanager
+
+def access_secret_version(project_id, secret_id, version_id):
+    """
+    Access the payload for the given secret version if one exists.
+    The version can be a version number as a string (e.g. "5") or an
+    alias (e.g. "latest").
+    """
+    client = secretmanager.SecretManagerServiceClient()
+    name = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
+    response = client.access_secret_version(request={"name": name})
+    return response.payload.data.decode("UTF-8")
+
+# Use your Google Cloud Project ID, secret ID, and version
+project_id = "maps-407800"
+secret_id = "google-api-key"
+version_id = "latest"  # Can be "latest" or a specific version number
+
+api_key = access_secret_version(project_id, secret_id, version_id)
+
+
 server = app.server
 
 # Constants
@@ -27,7 +48,7 @@ wes_anderson_palette = [
 ]
 
 # Initialize Google Maps client
-gmaps = googlemaps.Client(key='AIzaSyCRFJ3g0ifIADm4l_IWw4sEXv4XdDeP3d8')
+gmaps = googlemaps.Client(key=api_key)
 
 # Function to load data
 def load_data(data_file: str = "test.csv") -> pd.DataFrame:
