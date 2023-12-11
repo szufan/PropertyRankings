@@ -11,7 +11,6 @@ from datetime import datetime, timedelta
 import pytz
 import numpy as np
 import re
-
 from google.cloud import secretmanager
 
 def access_secret_version(project_id, secret_id, version_id):
@@ -31,7 +30,6 @@ secret_id = "google-api-key"
 version_id = "latest"  # Can be "latest" or a specific version number
 
 api_key = access_secret_version(project_id, secret_id, version_id)
-
 
 server = app.server
 
@@ -90,23 +88,33 @@ def load_data(data_file):
     """Load data from a CSV file."""
     return pd.read_csv(data_file)
 
-# Payment Calculation
-def calculate_monthly_payment(price, annual_tax, hoa, monthly_interest_rate, total_payments):
-    """Calculate monthly payment."""
-    monthly_tax = annual_tax / 12 if annual_tax > 0 else 0
-    total_loan_amount = price + monthly_tax + hoa
+def calculate_monthly_payment(price, annual_tax, hoa, annual_interest_rate, loan_term_years):
+    """Calculate monthly mortgage payment including taxes and HOA fees."""
+    # Calculate the loan amount (80% of the property price)
+    loan_amount = price * 0.8
+
+    # Convert annual interest rate to monthly and total number of payments
+    monthly_interest_rate = annual_interest_rate / 12
+    total_payments = loan_term_years * 12
+
+    # Monthly mortgage payment calculation
     if monthly_interest_rate > 0:
-        return total_loan_amount * (monthly_interest_rate * (1 + monthly_interest_rate) ** total_payments) / ((1 + monthly_interest_rate) ** total_payments - 1)
-    return total_loan_amount / total_payments
+        monthly_mortgage_payment = loan_amount * (monthly_interest_rate * (1 + monthly_interest_rate) ** total_payments) / ((1 + monthly_interest_rate) ** total_payments - 1)
+    else:
+        monthly_mortgage_payment = loan_amount / total_payments
+
+    # Add monthly property tax and HOA fees
+    monthly_tax = annual_tax / 12
+    total_monthly_payment = monthly_mortgage_payment + monthly_tax + hoa
+
+    return total_monthly_payment
 
 def calculate_payments(df, annual_interest_rate=0.068, loan_term_years=30):
     """Calculate payments for all rows in a DataFrame."""
-    monthly_interest_rate = annual_interest_rate / 12.0
-    total_payments = loan_term_years * 12
     df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
     df['Annual tax'] = pd.to_numeric(df['Annual tax'], errors='coerce')
     df['HOA'] = pd.to_numeric(df['HOA'], errors='coerce')
-    df['Payment'] = df.apply(lambda row: calculate_monthly_payment(row['Price'], row['Annual tax'], row['HOA'], monthly_interest_rate, total_payments), axis=1)
+    df['Payment'] = df.apply(lambda row: calculate_monthly_payment(row['Price'], row['Annual tax'], row['HOA'], annual_interest_rate, loan_term_years), axis=1)
     return df
 
 # Travel Time Calculation
