@@ -1,6 +1,6 @@
 services:
 - type: web
-  name: dash-app
+  name: property-rankings-app
   env: python
   buildCommand: pip install -r requirements.txt
   startCommand: gunicorn src.app:server --log-file=-
