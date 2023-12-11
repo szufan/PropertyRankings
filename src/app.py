@@ -31,6 +31,8 @@ version_id = "latest"  # Can be "latest" or a specific version number
 
 api_key = access_secret_version(project_id, secret_id, version_id)
 
+app = Dash(__name__, title="Property Rankings")
+
 server = app.server
 
 # Constants
@@ -173,8 +175,6 @@ def create_description_text():
         html.Li("Shortest commute time (20%)"),
         html.Li("Shortest transit time to DC museums (10%)"),
     ]
-
-app = Dash(__name__, title="Property Rankings")
 
 # App layout
 app.layout = html.Div([
