@@ -1,6 +1,6 @@
-dash==2.14.2
-pandas==1.4.4
-plotly==5.18.0
+dash
+pandas
+plotly
 gunicorn
 dash-tools
 pathlib

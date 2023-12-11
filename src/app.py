@@ -41,7 +41,7 @@ server = app.server
 # Constants
 NIH_ADDRESS = "Medical Center, Bethesda, MD 20894, United States"
 SMITHSONIAN_ADDRESS = "10th St. & Constitution Ave. NW, Washington, DC 20560"
-DATA_FILE = "/Users/szufan/PropertyRankings/src/data/test.csv"
+DATA_FILE = "src/data/test.csv"
 
 # Create a custom color palette inspired by Wes Anderson aesthetics with 15 colors
 wes_anderson_palette = [
@@ -56,7 +56,9 @@ gmaps = googlemaps.Client(key=api_key)
 # Function to load data
 def load_data(data_file: str = "test.csv") -> pd.DataFrame:
     PATH = pathlib.Path(__file__).parent
-    DATA_PATH = PATH.joinpath("data").resolve()
+    DATA_PATH = PATH.joinpath("data", data_file).resolve()
+    return pd.read_csv(DATA_PATH)
+
 
 def parse_contents(contents):
     content_type, content_string = contents.split(',')
@@ -208,8 +210,13 @@ app.layout = html.Div(style={'font-family': 'Nunito Sans, sans-serif'}, children
 )
 
 def update_graph(contents, filename):
-    # Load and process data
-    df = load_data(DATA_FILE)
+    if filename is None:
+        # Handle the case where no file is uploaded
+        # You can provide a default DataFrame or display an error message
+        df = pd.DataFrame()
+    else:
+        # Load and process data from the uploaded file
+        df = load_data(filename)
     
     current_time = datetime.now(pytz.timezone('Australia/Sydney'))
     weekday_morning_et = to_eastern_time(current_time + timedelta((2 - current_time.weekday() + 7) % 7)).replace(hour=8, minute=0, second=0, microsecond=0)
