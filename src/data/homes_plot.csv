@@ -1,0 +1,16 @@
+﻿Address,ID,Payment,Size,Metro,Commute,City,Score,Link
+"10401 Grosvenor Pl APT 1510, Rockville, MD 20852",A,"3,196.94",1206,607,20.5,49 mins,3.174,https://www.zillow.com/homedetails/10401-Grosvenor-Pl-APT-1510-Rockville-MD-20852/37114318_zpid/
+"1115 Gilbert Rd., Rockville, MD 20851",B,"3,967.94",1488,928,41,1 hour 10 mins,3.705,https://www.redfin.com/MD/Rockville/1115-Gilbert-Rd-20851/home/10512481
+"11801 Rockville Pik #913, Rockville, MD 20852",C,"3,008.61",1144,367,25.5,51 mins,3.223,https://www.redfin.com/MD/Rockville/11801-Rockville-Pike-20852/unit-913/home/10523245
+"10500 Rockville Pike UNIT 610, Rockville, MD 20852",D,"3,419.31",1206,272,14,43 mins,3.318,https://www.zillow.com/homedetails/10500-Rockville-Pike-UNIT-610-Rockville-MD-20852/37113380_zpid/
+"10715 Hampton Mill Ter. #100, Rockville, MD 20852",E,"3,051.75",1037,1257,26,51 mins,3.14,https://www.redfin.com/MD/North-Bethesda/10715-Hampton-Mill-Ter-20852/unit-100/home/143334557
+"5821 Edson Ln. Unit 5821-2, Rockville, MD 20852",F,"3,503.46",1100,962,28.5,56 mins,3.145,https://www.redfin.com/MD/Rockville/5821-Edson-Ln-20852/unit-5821-2/home/10540948
+"1201 Edmonston Dr., Rockville, MD 20851",G,"3,482.17",1526,539,32,1 hour 7 mins,3.556,https://www.redfin.com/MD/Rockville/1201-Edmonston-Dr-20851/home/10513130
+"4600 Connecticut Ave NW Unit 218, Washington, DC 20008",H,"3,796.46",1073,385,23.5,28 mins,3.098,https://www.redfin.com/DC/Washington/4600-Connecticut-Ave-NW-20008/unit-218/home/9976217
+"4301 Military Rd NW #609, Washington, DC 20015",I,"5,305.94",900,450,17,36 mins,2.855,https://www.redfin.com/DC/Washington/4301-Military-Rd-NW-20015/unit-609/home/12531379
+"5305 Connecticut Ave NW #2, Washington, DC 20015",J,"4,621.82",1089,327,32,42 mins,2.745,https://www.redfin.com/DC/Washington/5305-Connecticut-Ave-NW-20015/unit-2/home/185232269
+"4515 Willard Ave Unit 1701S, Chevy Chase, MD 20815",K,"2,942.46",904,655,20.5,40 mins,3.084,https://www.redfin.com/MD/Chevy-Chase/4515-Willard-Ave-20815/unit-1701S/home/10692789
+"5500 Friendship Blvd Unit 2303N Chevy Chase, MD 20815",L,"4,600.55",1292,661,20.5,40 mins,2.735,https://www.redfin.com/MD/Chevy-Chase/5500-Friendship-Blvd-20815/unit-2303N/home/22059994
+"3041 Sedgwick St NW Unit 403D, Washington, DC 20008",M,"4,651.53",1061,780,28,33 mins,2.689,https://www.redfin.com/DC/Washington/3041-Sedgwick-St-NW-20008/unit-403-D/home/28687217
+"3001 Veazey Ter NW #213, Washington, DC 20008",N,"2,685.26",1050,451,20.5,30 mins,2.918,https://www.zillow.com/homedetails/3001-Veazey-Ter-NW-APT-213-Washington-DC-20008/2098694372_zpid/
+"3001 Veazey Ter NW #1405, Washington, DC 20008",O,"2,676.26",930,451,20.5,30 mins,2.897,https://www.zillow.com/homedetails/3001-Veazey-Ter-NW-APT-1405-Washington-DC-20008/2056928181_zpid/
