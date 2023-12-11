@@ -31,12 +31,12 @@ version_id = "latest"  # Can be "latest" or a specific version number
 
 api_key = access_secret_version(project_id, secret_id, version_id)
 
-server = app.server
+#server = app.server
 
 # Constants
 NIH_ADDRESS = "Medical Center, Bethesda, MD 20894, United States"
 SMITHSONIAN_ADDRESS = "10th St. & Constitution Ave. NW, Washington, DC 20560"
-DATA_FILE = "data/test.csv"
+DATA_FILE = "/Users/szufan/PropertyRankings/src/data/test.csv"
 
 # Create a custom color palette inspired by Wes Anderson aesthetics with 15 colors
 wes_anderson_palette = [
