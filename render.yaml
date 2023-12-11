@@ -3,10 +3,10 @@ services:
   name: property-rankings-app
   env: python
   plan: starter
-  buildCommand: "pip install -r requirements.txt"
-  startCommand: "python app.py"
+  buildCommand: pip install -r requirements.txt
+  startCommand: python app.py
   envVars:
   - key: DASH_SECRET_KEY
     generateValue: true
   regions:
-    - oregon
+  - oregon
