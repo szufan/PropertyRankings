@@ -3,4 +3,12 @@ pandas==1.4.4
 plotly==5.18.0
 gunicorn
 dash-tools
+pathlib
+pandas
+plotly
+dash
 dash-uploader
+googlemaps
+pytz
+numpy
+google-cloud-secret-manager
