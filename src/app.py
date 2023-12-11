@@ -31,7 +31,7 @@ version_id = "latest"  # Can be "latest" or a specific version number
 
 api_key = access_secret_version(project_id, secret_id, version_id)
 
-#server = app.server
+server = app.server
 
 # Constants
 NIH_ADDRESS = "Medical Center, Bethesda, MD 20894, United States"
